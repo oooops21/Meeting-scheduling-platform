@@ -1,4 +1,4 @@
-# -<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
@@ -13,7 +13,7 @@
       min-height: 100vh;
     }
     .container {
-      max-width: 680px;
+      max-width: 700px;
       margin: 48px auto;
       background: #fff;
       border-radius: 18px;
@@ -89,7 +89,7 @@
     .time-group button:hover {
       background: #b71c1c;
     }
-    .add-time-btn, .submit-btn {
+    .add-time-btn, .submit-btn, .copy-btn {
       background: linear-gradient(90deg,#1976d2 60%,#7e57c2 100%);
       color: #fff;
       border: none;
@@ -102,7 +102,7 @@
       box-shadow: 0 2px 12px rgba(33,150,243,0.12);
       transition: background 0.2s, box-shadow 0.2s;
     }
-    .add-time-btn:hover, .submit-btn:hover {
+    .add-time-btn:hover, .submit-btn:hover, .copy-btn:hover {
       background: linear-gradient(90deg,#1565c0 60%,#5e35b1 100%);
       box-shadow: 0 4px 24px rgba(33,150,243,0.16);
     }
@@ -171,6 +171,28 @@
       border-top-right-radius: 18px;
       z-index: 1;
     }
+    .link-box {
+      background: #e3f2fd;
+      border-radius: 7px;
+      border: 1px solid #90caf9;
+      padding: 18px;
+      margin: 22px 0 6px 0;
+      text-align: center;
+      font-size: 1.13em;
+      color: #1976d2;
+      word-break: break-all;
+      position: relative;
+    }
+    .copy-btn {
+      font-size: 1em;
+      padding: 8px 18px;
+      margin-top: 10px;
+      margin-right: 0;
+      background: linear-gradient(90deg,#1976d2 70%,#7e57c2 100%);
+    }
+    .copy-btn:active {
+      background: linear-gradient(90deg,#3949ab 70%,#5e35b1 100%);
+    }
     @media (max-width: 700px) {
       .container { padding: 16px 5vw 16px 5vw; }
       .time-group { flex-direction: column; gap: 2px; }
@@ -182,22 +204,35 @@
   <div class="container">
     <div class="web-header"></div>
     <h2>會議時間投票平台</h2>
-    <!-- Organizer creates meeting -->
-    <form id="createForm">
-      <label for="organizerName">主辦人姓名</label>
+
+    <!-- 會議建立表單（只有主頁顯示） -->
+    <form id="createForm" class="hidden">
+      <label for="organizerName">會議發起人姓名</label>
       <input type="text" id="organizerName" required placeholder="請輸入您的名字">
-      <label for="organizerContact">主辦人聯絡方式</label>
+      <label for="organizerContact">會議發起人聯絡方式</label>
       <input type="text" id="organizerContact" required placeholder="電子郵件或電話">
       <label for="meetingTitle">會議主題</label>
       <input type="text" id="meetingTitle" required placeholder="請輸入會議主題">
-      <label for="meetingDesc">會議說明</label>
+      <label for="meetingDesc">會議地點</label>
       <textarea id="meetingDesc" rows="2" required placeholder="請輸入會議說明"></textarea>
-      <label>請提出可行的時間區間選項：</label>
+      <label>可行時間安排：</label>
       <div id="timeOptions" class="time-options"></div>
       <button type="button" class="add-time-btn" onclick="addTimeOption()">➕ 新增時間區間</button>
       <button type="submit" class="submit-btn">建立會議</button>
     </form>
-    <!-- Voting section -->
+
+    <!-- 建立後顯示分享連結 -->
+    <div id="linkSection" class="hidden">
+      <div class="link-box">
+        會議已建立！請分享此連結給參與者投票：<br>
+        <span id="meetingLink"></span>
+        <button class="copy-btn" onclick="copyLink()">複製連結</button>
+        <span id="copyStatus" style="display:none;color:#388e3c;font-size:0.95em;margin-left:12px;">已複製！</span>
+      </div>
+      <button class="submit-btn" onclick="gotoVote()">前往投票頁面</button>
+    </div>
+
+    <!-- 投票與結果（id連結頁顯示） -->
     <div id="meetingSection" class="hidden">
       <h3 id="mtTitle"></h3>
       <div id="mtDesc"></div>
@@ -213,7 +248,36 @@
     </div>
   </div>
   <script>
-    // Time range option creation
+    // 工具函式
+    function formatDateTime(dt) {
+      return `${dt.getFullYear()}年${(dt.getMonth()+1)}月${dt.getDate()}日 ${dt.getHours().toString().padStart(2,'0')}時${dt.getMinutes().toString().padStart(2,'0')}分`;
+    }
+    function generateMeetingId() {
+      // 產生唯一代碼
+      return 'M' + Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+    }
+    function getMeetingIdFromUrl() {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("id");
+    }
+    function getMeetingFromStorage(id) {
+      try {
+        return JSON.parse(localStorage.getItem("meeting_" + id));
+      } catch { return null; }
+    }
+    function saveMeetingToStorage(id, meeting) {
+      localStorage.setItem("meeting_" + id, JSON.stringify(meeting));
+    }
+    function getVotesFromStorage(id) {
+      try {
+        return JSON.parse(localStorage.getItem("votes_" + id)) || [];
+      } catch { return []; }
+    }
+    function saveVotesToStorage(id, votes) {
+      localStorage.setItem("votes_" + id, JSON.stringify(votes));
+    }
+
+    // UI流程
     let timeOptionCount = 0;
     function addTimeOption(valueStart="", valueEnd="") {
       timeOptionCount++;
@@ -228,12 +292,38 @@
       `;
       document.getElementById('timeOptions').appendChild(div);
     }
-    // Meeting creation
+
+    // 判斷模式：建立會議 or 投票
+    let meetingId = getMeetingIdFromUrl();
     let meeting = null;
     let votes = [];
-    document.getElementById('createForm').addEventListener('submit', function(e){
+    if (!meetingId) {
+      // 主辦人模式
+      addTimeOption();
+      document.getElementById('createForm').classList.remove('hidden');
+    } else {
+      // 投票模式
+      meeting = getMeetingFromStorage(meetingId);
+      votes = getVotesFromStorage(meetingId);
+      // 隱藏建立會議的資訊
+      document.getElementById('createForm').classList.add('hidden');
+      document.getElementById('linkSection').classList.add('hidden');
+      if (!meeting) {
+        document.body.innerHTML = "<div style='margin:100px auto;text-align:center;color:#d32f2f;font-size:1.3em;'>無此會議，請確認連結正確。</div>";
+      } else {
+        document.getElementById('meetingSection').classList.remove('hidden');
+        document.getElementById('mtTitle').innerText = meeting.title;
+        document.getElementById('mtDesc').innerText = meeting.desc;
+        document.getElementById('organizerInfo').innerHTML = `主辦人：${meeting.organizerName}　聯絡方式：${meeting.organizerContact}`;
+        renderVoteOptions();
+        renderVoteStatus();
+      }
+    }
+
+    // 建立會議事件
+    document.getElementById('createForm')?.addEventListener('submit', function(e){
       e.preventDefault();
-      // Gather time options (ranges)
+      // 收集時間區間
       const timeGroups = document.querySelectorAll('.time-group');
       let options = [];
       timeGroups.forEach((grp, idx) => {
@@ -255,25 +345,33 @@
         alert("請至少新增一個有效的時間區間選項！（開始時間須早於結束時間）");
         return;
       }
-      meeting = {
+      const newMeeting = {
         organizerName: document.getElementById('organizerName').value,
         organizerContact: document.getElementById('organizerContact').value,
         title: document.getElementById('meetingTitle').value,
         desc: document.getElementById('meetingDesc').value,
         options
       };
+      const newId = generateMeetingId();
+      saveMeetingToStorage(newId, newMeeting);
+      // 顯示分享連結
       document.getElementById('createForm').classList.add('hidden');
-      document.getElementById('meetingSection').classList.remove('hidden');
-      document.getElementById('mtTitle').innerText = meeting.title;
-      document.getElementById('mtDesc').innerText = meeting.desc;
-      document.getElementById('organizerInfo').innerHTML = `主辦人：${meeting.organizerName}　聯絡方式：${meeting.organizerContact}`;
-      renderVoteOptions();
-      renderVoteStatus();
+      document.getElementById('linkSection').classList.remove('hidden');
+      document.getElementById('meetingLink').innerText = window.location.origin + window.location.pathname + "?id=" + newId;
+      window.meetingIdForLink = newId;
     });
-    function formatDateTime(dt) {
-      return `${dt.getFullYear()}年${(dt.getMonth()+1)}月${dt.getDate()}日 ${dt.getHours().toString().padStart(2,'0')}時${dt.getMinutes().toString().padStart(2,'0')}分`;
+
+    function copyLink() {
+      const link = document.getElementById('meetingLink').innerText;
+      navigator.clipboard.writeText(link);
+      document.getElementById('copyStatus').style.display = '';
+      setTimeout(()=>{document.getElementById('copyStatus').style.display='none';},1400);
     }
-    // Render vote checkboxes
+    function gotoVote() {
+      window.location.href = document.getElementById('meetingLink').innerText;
+    }
+
+    // 投票選項
     function renderVoteOptions() {
       const vo = document.getElementById('voteOptions');
       vo.innerHTML = '';
@@ -281,8 +379,9 @@
         vo.innerHTML += `<label style="display:block;margin-bottom:7px;"><input type="checkbox" value="${opt.id}"> <span style="color:#1976d2;font-weight:bold;">${opt.label}</span></label>`;
       });
     }
-    // Voting
-    document.getElementById('voteForm').addEventListener('submit', function(e){
+
+    // 投票
+    document.getElementById('voteForm')?.addEventListener('submit', function(e){
       e.preventDefault();
       const name = document.getElementById('voterName').value.trim();
       if(!name) {
@@ -294,16 +393,18 @@
         alert('請至少選擇一個時間區間');
         return;
       }
-      // Avoid duplicate voter name
+      // 不可重複名字
       if(votes.some(v=>v.name===name)) {
         alert('此名字已經投過票了');
         return;
       }
       votes.push({ name, picks: checked });
+      saveVotesToStorage(meetingId, votes);
       document.getElementById('voteForm').reset();
       renderVoteStatus();
     });
-    // Voting status table
+
+    // 投票狀態
     function renderVoteStatus() {
       const status = document.getElementById('voteStatus');
       if(votes.length === 0) {
@@ -330,8 +431,6 @@
       html += '</table>';
       status.innerHTML = html;
     }
-    // Default: add one time group
-    addTimeOption();
   </script>
 </body>
 </html>
