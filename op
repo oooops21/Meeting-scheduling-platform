@@ -1,0 +1,337 @@
+# -<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>會議時間投票平台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: "Noto Sans TC", "微軟正黑體", Arial, sans-serif;
+      background: linear-gradient(135deg, #E3F2FD 0%, #FCE4EC 100%);
+      margin: 0; 
+      padding: 0; 
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 680px;
+      margin: 48px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(33,150,243,0.12);
+      padding: 38px 28px 28px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #1976d2;
+      margin-top: 0;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 16px;
+      display: block;
+      color: #3949ab;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 16px 0;
+      border: 1px solid #90caf9;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: border-color 0.2s;
+      background: #f5f8ff;
+    }
+    input:focus, textarea:focus {
+      border-color: #1976d2;
+      outline: none;
+      background: #e3f2fd;
+    }
+    .time-options {
+      margin-bottom: 24px;
+    }
+    .time-group {
+      background: #e3f2fd;
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(33,150,243,0.07);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .time-group label {
+      margin-top: 0;
+      margin-right: 10px;
+      flex-basis: 100%;
+      color: #1976d2;
+    }
+    .time-group input[type="datetime-local"] {
+      width: auto;
+      flex: 1 1 180px;
+      margin: 0 10px 0 0;
+      background: #fff;
+    }
+    .time-group button {
+      background: #d32f2f;
+      color: #fff;
+      font-size: 0.95em;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-left: 10px;
+      margin-top: 0;
+    }
+    .time-group button:hover {
+      background: #b71c1c;
+    }
+    .add-time-btn, .submit-btn {
+      background: linear-gradient(90deg,#1976d2 60%,#7e57c2 100%);
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      border-radius: 9px;
+      padding: 12px 24px;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-right: 8px;
+      box-shadow: 0 2px 12px rgba(33,150,243,0.12);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .add-time-btn:hover, .submit-btn:hover {
+      background: linear-gradient(90deg,#1565c0 60%,#5e35b1 100%);
+      box-shadow: 0 4px 24px rgba(33,150,243,0.16);
+    }
+    .hidden {
+      display: none;
+    }
+    .contact {
+      font-size: 0.97em;
+      color: #333;
+      margin-bottom: 12px;
+      background: #fff8e1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 1px 6px rgba(255,193,7,0.11);
+    }
+    .vote-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 22px;
+      background: #f3e5f5;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(103,58,183,0.08);
+    }
+    .vote-table th, .vote-table td {
+      border: 1px solid #ce93d8;
+      padding: 10px 6px;
+      text-align: center;
+    }
+    .vote-table th {
+      background: #7e57c2;
+      color: #fff;
+      font-weight: bold;
+    }
+    .most-voted {
+      background: #388e3c !important;
+      color: #fff !important;
+      font-weight: bold;
+    }
+    .option-tally {
+      color: #d32f2f;
+      font-weight: bold;
+      margin-top: 3px;
+      display: block;
+    }
+    .vote-table td {
+      background: #ede7f6;
+    }
+    .vote-table td:first-child {
+      background: #fffde7;
+      font-weight: bold;
+      color: #3949ab;
+    }
+    .vote-table tr:hover td {
+      background: #fce4ec;
+      transition: background 0.2s;
+    }
+    .web-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 18px;
+      background: linear-gradient(90deg,#1976d2 70%,#fce4ec 100%);
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      z-index: 1;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 16px 5vw 16px 5vw; }
+      .time-group { flex-direction: column; gap: 2px; }
+      .time-group input[type="datetime-local"] { width: 100%; margin: 0 0 5px 0;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="web-header"></div>
+    <h2>會議時間投票平台</h2>
+    <!-- Organizer creates meeting -->
+    <form id="createForm">
+      <label for="organizerName">主辦人姓名</label>
+      <input type="text" id="organizerName" required placeholder="請輸入您的名字">
+      <label for="organizerContact">主辦人聯絡方式</label>
+      <input type="text" id="organizerContact" required placeholder="電子郵件或電話">
+      <label for="meetingTitle">會議主題</label>
+      <input type="text" id="meetingTitle" required placeholder="請輸入會議主題">
+      <label for="meetingDesc">會議說明</label>
+      <textarea id="meetingDesc" rows="2" required placeholder="請輸入會議說明"></textarea>
+      <label>請提出可行的時間區間選項：</label>
+      <div id="timeOptions" class="time-options"></div>
+      <button type="button" class="add-time-btn" onclick="addTimeOption()">➕ 新增時間區間</button>
+      <button type="submit" class="submit-btn">建立會議</button>
+    </form>
+    <!-- Voting section -->
+    <div id="meetingSection" class="hidden">
+      <h3 id="mtTitle"></h3>
+      <div id="mtDesc"></div>
+      <div class="contact" id="organizerInfo"></div>
+      <form id="voteForm">
+        <label for="voterName">您的名字</label>
+        <input type="text" id="voterName" required placeholder="請輸入您的名字">
+        <label>請選擇您可以的時間區間：</label>
+        <div id="voteOptions"></div>
+        <button type="submit" class="submit-btn">提交投票</button>
+      </form>
+      <div id="voteStatus"></div>
+    </div>
+  </div>
+  <script>
+    // Time range option creation
+    let timeOptionCount = 0;
+    function addTimeOption(valueStart="", valueEnd="") {
+      timeOptionCount++;
+      const div = document.createElement('div');
+      div.className = "time-group";
+      div.innerHTML = `
+        <label>選項 ${timeOptionCount}：</label>
+        <input type="datetime-local" class="datetime-start" required value="${valueStart}">
+        <span style="margin:0 8px;">至</span>
+        <input type="datetime-local" class="datetime-end" required value="${valueEnd}">
+        <button type="button" onclick="this.parentElement.remove();">刪除</button>
+      `;
+      document.getElementById('timeOptions').appendChild(div);
+    }
+    // Meeting creation
+    let meeting = null;
+    let votes = [];
+    document.getElementById('createForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      // Gather time options (ranges)
+      const timeGroups = document.querySelectorAll('.time-group');
+      let options = [];
+      timeGroups.forEach((grp, idx) => {
+        const start = grp.querySelector('.datetime-start').value;
+        const end = grp.querySelector('.datetime-end').value;
+        if (!start || !end) return;
+        const startObj = new Date(start);
+        const endObj = new Date(end);
+        if (isNaN(startObj.getTime()) || isNaN(endObj.getTime()) || endObj <= startObj) return;
+        const label = `${formatDateTime(startObj)} ～ ${formatDateTime(endObj)}`;
+        options.push({
+          id: idx,
+          label,
+          isoStart: start,
+          isoEnd: end
+        });
+      });
+      if(options.length === 0) {
+        alert("請至少新增一個有效的時間區間選項！（開始時間須早於結束時間）");
+        return;
+      }
+      meeting = {
+        organizerName: document.getElementById('organizerName').value,
+        organizerContact: document.getElementById('organizerContact').value,
+        title: document.getElementById('meetingTitle').value,
+        desc: document.getElementById('meetingDesc').value,
+        options
+      };
+      document.getElementById('createForm').classList.add('hidden');
+      document.getElementById('meetingSection').classList.remove('hidden');
+      document.getElementById('mtTitle').innerText = meeting.title;
+      document.getElementById('mtDesc').innerText = meeting.desc;
+      document.getElementById('organizerInfo').innerHTML = `主辦人：${meeting.organizerName}　聯絡方式：${meeting.organizerContact}`;
+      renderVoteOptions();
+      renderVoteStatus();
+    });
+    function formatDateTime(dt) {
+      return `${dt.getFullYear()}年${(dt.getMonth()+1)}月${dt.getDate()}日 ${dt.getHours().toString().padStart(2,'0')}時${dt.getMinutes().toString().padStart(2,'0')}分`;
+    }
+    // Render vote checkboxes
+    function renderVoteOptions() {
+      const vo = document.getElementById('voteOptions');
+      vo.innerHTML = '';
+      meeting.options.forEach(opt => {
+        vo.innerHTML += `<label style="display:block;margin-bottom:7px;"><input type="checkbox" value="${opt.id}"> <span style="color:#1976d2;font-weight:bold;">${opt.label}</span></label>`;
+      });
+    }
+    // Voting
+    document.getElementById('voteForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('voterName').value.trim();
+      if(!name) {
+        alert('請填寫您的名字');
+        return;
+      }
+      const checked = Array.from(document.querySelectorAll('#voteOptions input:checked')).map(i=>parseInt(i.value));
+      if(checked.length === 0) {
+        alert('請至少選擇一個時間區間');
+        return;
+      }
+      // Avoid duplicate voter name
+      if(votes.some(v=>v.name===name)) {
+        alert('此名字已經投過票了');
+        return;
+      }
+      votes.push({ name, picks: checked });
+      document.getElementById('voteForm').reset();
+      renderVoteStatus();
+    });
+    // Voting status table
+    function renderVoteStatus() {
+      const status = document.getElementById('voteStatus');
+      if(votes.length === 0) {
+        status.innerHTML = "<p style='color:#999;font-style:italic;'>目前尚無投票記錄。</p>";
+        return;
+      }
+      let tallies = meeting.options.map(opt => ({
+        ...opt,
+        count: votes.filter(v=>v.picks.includes(opt.id)).length
+      }));
+      let max = Math.max(...tallies.map(t=>t.count));
+      let html = `<table class="vote-table"><tr><th>參與者</th>`;
+      tallies.forEach(opt => {
+        html += `<th${opt.count===max && max>0?' class="most-voted"':''}>${opt.label}<br><span class="option-tally">${opt.count}票</span></th>`;
+      });
+      html += '</tr>';
+      votes.forEach(vote => {
+        html += `<tr><td>${vote.name}</td>`;
+        tallies.forEach(opt => {
+          html += `<td>${vote.picks.includes(opt.id)?'✔️':''}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</table>';
+      status.innerHTML = html;
+    }
+    // Default: add one time group
+    addTimeOption();
+  </script>
+</body>
+</html>
