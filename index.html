@@ -11,6 +11,7 @@
       margin: 0; 
       padding: 0; 
       min-height: 100vh;
+      text-align: left;
     }
     .container {
       max-width: 700px;
@@ -21,9 +22,10 @@
       padding: 38px 28px 28px 28px;
       position: relative;
       overflow: hidden;
+      text-align: left;
     }
     h2, h3 {
-      text-align: center;
+      text-align: left;
       color: #1976d2;
       margin-top: 0;
     }
@@ -32,6 +34,7 @@
       margin-top: 16px;
       display: block;
       color: #3949ab;
+      text-align: left;
     }
     input, textarea, select {
       width: 100%;
@@ -42,6 +45,7 @@
       font-size: 1em;
       transition: border-color 0.2s;
       background: #f5f8ff;
+      text-align: left;
     }
     input:focus, textarea:focus {
       border-color: #1976d2;
@@ -50,6 +54,7 @@
     }
     .time-options {
       margin-bottom: 24px;
+      text-align: left;
     }
     .time-group {
       background: #e3f2fd;
@@ -61,18 +66,21 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 8px;
+      text-align: left;
     }
     .time-group label {
       margin-top: 0;
       margin-right: 10px;
       flex-basis: 100%;
       color: #1976d2;
+      text-align: left;
     }
     .time-group input[type="datetime-local"] {
       width: auto;
       flex: 1 1 180px;
       margin: 0 10px 0 0;
       background: #fff;
+      text-align: left;
     }
     .time-group button {
       background: #d32f2f;
@@ -85,6 +93,7 @@
       transition: background 0.2s;
       margin-left: 10px;
       margin-top: 0;
+      text-align: left;
     }
     .time-group button:hover {
       background: #b71c1c;
@@ -101,6 +110,7 @@
       margin-right: 8px;
       box-shadow: 0 2px 12px rgba(33,150,243,0.12);
       transition: background 0.2s, box-shadow 0.2s;
+      text-align: left;
     }
     .add-time-btn:hover, .submit-btn:hover, .copy-btn:hover {
       background: linear-gradient(90deg,#1565c0 60%,#5e35b1 100%);
@@ -117,6 +127,7 @@
       padding: 8px 12px;
       border-radius: 6px;
       box-shadow: 0 1px 6px rgba(255,193,7,0.11);
+      text-align: left;
     }
     .vote-table {
       width: 100%;
@@ -126,6 +137,7 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(103,58,183,0.08);
+      text-align: left;
     }
     .vote-table th, .vote-table td {
       border: 1px solid #ce93d8;
@@ -147,6 +159,7 @@
       font-weight: bold;
       margin-top: 3px;
       display: block;
+      text-align: left;
     }
     .vote-table td {
       background: #ede7f6;
@@ -177,7 +190,7 @@
       border: 1px solid #90caf9;
       padding: 18px;
       margin: 22px 0 6px 0;
-      text-align: center;
+      text-align: left;
       font-size: 1.13em;
       color: #1976d2;
       word-break: break-all;
@@ -189,14 +202,82 @@
       margin-top: 10px;
       margin-right: 0;
       background: linear-gradient(90deg,#1976d2 70%,#7e57c2 100%);
+      text-align: left;
     }
     .copy-btn:active {
       background: linear-gradient(90deg,#3949ab 70%,#5e35b1 100%);
+    }
+    .vote-option-row {
+      margin-bottom: 12px;
+      font-size: 1.13em;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      width: 100%;
+    }
+    #voteOptions {
+      text-align: left;
+      width: 100%;
+      display: block;
+    }
+    .vote-option-row .vote-time-label {
+      color: #1976d2;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-align: left;
+      width: auto;
+      display: inline-block;
+    }
+    .vote-option-row input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.3);
     }
     @media (max-width: 700px) {
       .container { padding: 16px 5vw 16px 5vw; }
       .time-group { flex-direction: column; gap: 2px; }
       .time-group input[type="datetime-local"] { width: 100%; margin: 0 0 5px 0;}
+      .vote-option-row { font-size: 1em; }
+    }
+    #loginSection {
+      background: #e3f2fd;
+      border-radius: 8px;
+      padding: 24px 44px;
+      margin: 0 auto 24px auto;
+      box-shadow: 0 2px 8px rgba(33,150,243,0.07);
+      text-align: left;
+      max-width: 420px;
+    }
+    #loginSection label {
+      color: #1976d2;
+      font-size: 1.08em;
+      margin-top: 0;
+    }
+    #loginSection input[type="text"], #loginSection input[type="email"] {
+      background: #fff;
+    }
+    #logoutBtn {
+      background: #d32f2f;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-weight: bold;
+      font-size: 1em;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    #logoutBtn:hover {
+      background: #b71c1c;
+    }
+    #currentUserInfo {
+      margin-bottom: 14px;
+      font-size: 1.08em;
+      color: #388e3c;
+      background: #f1f8e9;
+      padding: 10px 14px;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(56,142,60,0.13);
     }
   </style>
 </head>
@@ -207,15 +288,15 @@
 
     <!-- 會議建立表單（只有主頁顯示） -->
     <form id="createForm" class="hidden">
-      <label for="organizerName">會議發起人姓名</label>
+      <label for="organizerName">會議創辦人姓名</label>
       <input type="text" id="organizerName" required placeholder="請輸入您的名字">
-      <label for="organizerContact">會議發起人聯絡方式</label>
+      <label for="organizerContact">會議創辦人聯絡方式</label>
       <input type="text" id="organizerContact" required placeholder="電子郵件或電話">
       <label for="meetingTitle">會議主題</label>
       <input type="text" id="meetingTitle" required placeholder="請輸入會議主題">
-      <label for="meetingDesc">會議地點</label>
-      <textarea id="meetingDesc" rows="2" required placeholder="請輸入會議說明"></textarea>
-      <label>可行時間安排：</label>
+      <label for="meetingDesc">會議地點及資訊</label>
+      <textarea id="meetingDesc" rows="2" required placeholder="請輸入會議地點及資訊"></textarea>
+      <label>可行時間選項：</label>
       <div id="timeOptions" class="time-options"></div>
       <button type="button" class="add-time-btn" onclick="addTimeOption()">➕ 新增時間區間</button>
       <button type="submit" class="submit-btn">建立會議</button>
@@ -232,28 +313,45 @@
       <button class="submit-btn" onclick="gotoVote()">前往投票頁面</button>
     </div>
 
+    <!-- 登入區塊（投票頁） -->
+    <div id="loginSection" class="hidden">
+      <form id="loginForm">
+        <label for="loginName">請登入以投票</label>
+        <input type="text" id="loginName" required placeholder="請輸入您的名字">
+        <input type="email" id="loginEmail" required placeholder="請輸入您的電子郵件">
+        <button type="submit" class="submit-btn" style="width:auto;">登入</button>
+      </form>
+    </div>
+    <div id="currentUserInfo" class="hidden"></div>
+    <button id="logoutBtn" class="hidden" onclick="logout()">登出</button>
+
     <!-- 投票與結果（id連結頁顯示） -->
     <div id="meetingSection" class="hidden">
       <h3 id="mtTitle"></h3>
       <div id="mtDesc"></div>
       <div class="contact" id="organizerInfo"></div>
-      <form id="voteForm">
-        <label for="voterName">您的名字</label>
-        <input type="text" id="voterName" required placeholder="請輸入您的名字">
+      <form id="voteForm" class="hidden">
         <label>請選擇您可以的時間區間：</label>
         <div id="voteOptions"></div>
-        <button type="submit" class="submit-btn">提交投票</button>
+        <button type="submit" class="submit-btn">提交/修改投票</button>
       </form>
       <div id="voteStatus"></div>
     </div>
   </div>
   <script>
     // 工具函式
-    function formatDateTime(dt) {
-      return `${dt.getFullYear()}年${(dt.getMonth()+1)}月${dt.getDate()}日 ${dt.getHours().toString().padStart(2,'0')}時${dt.getMinutes().toString().padStart(2,'0')}分`;
+    function formatVoteTime(dt) {
+      const yyyy = dt.getFullYear();
+      const MM = (dt.getMonth() + 1).toString().padStart(2, '0');
+      const dd = dt.getDate().toString().padStart(2, '0');
+      const hh = dt.getHours().toString().padStart(2, '0');
+      const mm = dt.getMinutes().toString().padStart(2, '0');
+      return `${yyyy}/${MM}/${dd} ${hh}:${mm}`;
+    }
+    function formatVoteRange(startDt, endDt) {
+      return `${formatVoteTime(startDt)} ～ ${formatVoteTime(endDt)}`;
     }
     function generateMeetingId() {
-      // 產生唯一代碼
       return 'M' + Date.now().toString(36) + Math.random().toString(36).substr(2,5);
     }
     function getMeetingIdFromUrl() {
@@ -276,6 +374,20 @@
     function saveVotesToStorage(id, votes) {
       localStorage.setItem("votes_" + id, JSON.stringify(votes));
     }
+    function getCurrentUser() {
+      try {
+        return JSON.parse(localStorage.getItem("loginUser")) || null;
+      } catch { return null; }
+    }
+    function setCurrentUser(user) {
+      localStorage.setItem("loginUser", JSON.stringify(user));
+    }
+    function clearCurrentUser() {
+      localStorage.removeItem("loginUser");
+    }
+    function getUserVote(votes, user) {
+      return votes.find(v => v.name === user.name && v.email === user.email) || null;
+    }
 
     // UI流程
     let timeOptionCount = 0;
@@ -285,45 +397,41 @@
       div.className = "time-group";
       div.innerHTML = `
         <label>選項 ${timeOptionCount}：</label>
-        <input type="datetime-local" class="datetime-start" required value="${valueStart}">
+        <input type="datetime-local" class="datetime-start" required value="${valueStart}" step="900">
         <span style="margin:0 8px;">至</span>
-        <input type="datetime-local" class="datetime-end" required value="${valueEnd}">
+        <input type="datetime-local" class="datetime-end" required value="${valueEnd}" step="900">
         <button type="button" onclick="this.parentElement.remove();">刪除</button>
       `;
       document.getElementById('timeOptions').appendChild(div);
     }
 
-    // 判斷模式：建立會議 or 投票
     let meetingId = getMeetingIdFromUrl();
     let meeting = null;
     let votes = [];
+    let currentUser = getCurrentUser();
+
     if (!meetingId) {
-      // 主辦人模式
       addTimeOption();
       document.getElementById('createForm').classList.remove('hidden');
     } else {
-      // 投票模式
       meeting = getMeetingFromStorage(meetingId);
       votes = getVotesFromStorage(meetingId);
-      // 隱藏建立會議的資訊
       document.getElementById('createForm').classList.add('hidden');
       document.getElementById('linkSection').classList.add('hidden');
       if (!meeting) {
-        document.body.innerHTML = "<div style='margin:100px auto;text-align:center;color:#d32f2f;font-size:1.3em;'>無此會議，請確認連結正確。</div>";
+        document.body.innerHTML = "<div style='margin:100px auto;text-align:left;color:#d32f2f;font-size:1.3em;'>無此會議，請確認連結正確。</div>";
       } else {
         document.getElementById('meetingSection').classList.remove('hidden');
         document.getElementById('mtTitle').innerText = meeting.title;
         document.getElementById('mtDesc').innerText = meeting.desc;
-        document.getElementById('organizerInfo').innerHTML = `主辦人：${meeting.organizerName}　聯絡方式：${meeting.organizerContact}`;
-        renderVoteOptions();
+        document.getElementById('organizerInfo').innerHTML = `會議創辦人：${meeting.organizerName}　聯絡方式：${meeting.organizerContact}`;
+        showLoginUI();
         renderVoteStatus();
       }
     }
 
-    // 建立會議事件
     document.getElementById('createForm')?.addEventListener('submit', function(e){
       e.preventDefault();
-      // 收集時間區間
       const timeGroups = document.querySelectorAll('.time-group');
       let options = [];
       timeGroups.forEach((grp, idx) => {
@@ -333,7 +441,7 @@
         const startObj = new Date(start);
         const endObj = new Date(end);
         if (isNaN(startObj.getTime()) || isNaN(endObj.getTime()) || endObj <= startObj) return;
-        const label = `${formatDateTime(startObj)} ～ ${formatDateTime(endObj)}`;
+        const label = formatVoteRange(startObj, endObj);
         options.push({
           id: idx,
           label,
@@ -354,7 +462,6 @@
       };
       const newId = generateMeetingId();
       saveMeetingToStorage(newId, newMeeting);
-      // 顯示分享連結
       document.getElementById('createForm').classList.add('hidden');
       document.getElementById('linkSection').classList.remove('hidden');
       document.getElementById('meetingLink').innerText = window.location.origin + window.location.pathname + "?id=" + newId;
@@ -371,21 +478,71 @@
       window.location.href = document.getElementById('meetingLink').innerText;
     }
 
+    // 登入流程與UI
+    function showLoginUI() {
+      if (!currentUser) {
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('voteForm').classList.add('hidden');
+        document.getElementById('currentUserInfo').classList.add('hidden');
+        document.getElementById('logoutBtn').classList.add('hidden');
+      } else {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('voteForm').classList.remove('hidden');
+        document.getElementById('currentUserInfo').classList.remove('hidden');
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        document.getElementById('currentUserInfo').innerHTML = `已登入：${currentUser.name} &lt;${currentUser.email}&gt;`;
+        renderVoteOptions();
+        prefillVoteForm();
+      }
+    }
+    document.getElementById('loginForm')?.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('loginName').value.trim();
+      const email = document.getElementById('loginEmail').value.trim();
+      if(!name || !email) {
+        alert('請填寫您的名字和電子郵件');
+        return;
+      }
+      currentUser = { name, email };
+      setCurrentUser(currentUser);
+      showLoginUI();
+    });
+    function logout() {
+      currentUser = null;
+      clearCurrentUser();
+      showLoginUI();
+    }
+
     // 投票選項
     function renderVoteOptions() {
       const vo = document.getElementById('voteOptions');
       vo.innerHTML = '';
       meeting.options.forEach(opt => {
-        vo.innerHTML += `<label style="display:block;margin-bottom:7px;"><input type="checkbox" value="${opt.id}"> <span style="color:#1976d2;font-weight:bold;">${opt.label}</span></label>`;
+        vo.innerHTML += `
+          <div class="vote-option-row">
+            <input type="checkbox" value="${opt.id}" id="voteOpt${opt.id}">
+            <span class="vote-time-label">${opt.label}</span>
+          </div>
+        `;
+      });
+    }
+
+    // 投票表單填入現有資料
+    function prefillVoteForm() {
+      // 若使用者已投票，預設勾選
+      let uvote = getUserVote(votes, currentUser);
+      if (!uvote) return;
+      uvote.picks.forEach(i => {
+        let chk = document.getElementById('voteOpt'+i);
+        if (chk) chk.checked = true;
       });
     }
 
     // 投票
     document.getElementById('voteForm')?.addEventListener('submit', function(e){
       e.preventDefault();
-      const name = document.getElementById('voterName').value.trim();
-      if(!name) {
-        alert('請填寫您的名字');
+      if(!currentUser) {
+        alert('請先登入');
         return;
       }
       const checked = Array.from(document.querySelectorAll('#voteOptions input:checked')).map(i=>parseInt(i.value));
@@ -393,15 +550,17 @@
         alert('請至少選擇一個時間區間');
         return;
       }
-      // 不可重複名字
-      if(votes.some(v=>v.name===name)) {
-        alert('此名字已經投過票了');
-        return;
+      let idx = votes.findIndex(v => v.name === currentUser.name && v.email === currentUser.email);
+      if(idx >= 0) {
+        // 修改投票
+        votes[idx].picks = checked;
+      } else {
+        // 新增投票
+        votes.push({ name: currentUser.name, email: currentUser.email, picks: checked });
       }
-      votes.push({ name, picks: checked });
       saveVotesToStorage(meetingId, votes);
-      document.getElementById('voteForm').reset();
       renderVoteStatus();
+      alert('投票已儲存！您可隨時修改您的選擇。');
     });
 
     // 投票狀態
@@ -416,13 +575,13 @@
         count: votes.filter(v=>v.picks.includes(opt.id)).length
       }));
       let max = Math.max(...tallies.map(t=>t.count));
-      let html = `<table class="vote-table"><tr><th>參與者</th>`;
+      let html = `<table class="vote-table"><tr><th>參與者</th><th>電子郵件</th>`;
       tallies.forEach(opt => {
         html += `<th${opt.count===max && max>0?' class="most-voted"':''}>${opt.label}<br><span class="option-tally">${opt.count}票</span></th>`;
       });
       html += '</tr>';
       votes.forEach(vote => {
-        html += `<tr><td>${vote.name}</td>`;
+        html += `<tr><td>${vote.name}</td><td>${vote.email}</td>`;
         tallies.forEach(opt => {
           html += `<td>${vote.picks.includes(opt.id)?'✔️':''}</td>`;
         });
